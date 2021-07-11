@@ -19,6 +19,7 @@ def subprocess_args(include_stdout=True):
     else:
         si = None
         env = None
+
     if include_stdout:
         ret = {'stdout': subprocess.PIPE}
     else:
@@ -64,6 +65,12 @@ def countPlot(path):
         count += 1
     return count
 
+def getTotalCapacity(path):
+    totalCapacity=0
+    for name in glob.glob(path+'*.plot'):
+        totalCapacity+=int(os.path.getsize(name))
+    return totalCapacity
+
 def getPathFromChia():
     cmd = ['chia','plots','show']
 
@@ -72,6 +79,7 @@ def getPathFromChia():
     os.chdir("AppData\\Local\\chia-blockchain")
     os.chdir(glob.glob("app-*")[0])
     os.chdir('resources\\app.asar.unpacked\\daemon')
+
 
     try:
         returncode2 = subprocess.run(cmd, **subprocess_args(True))
@@ -117,6 +125,7 @@ def reloadUI(tree,statusLabel):
         item4 = detail[3]
         item5 = detail[4]
 
+
         tree.insert('', 'end', values=(item1, item2, item3, item4, item5))
 
     pathList = getPathFromChia()
@@ -131,10 +140,11 @@ def reloadUI(tree,statusLabel):
 def getStatus(pathList):
     capacity=0
     number=0
+    
     for i in range(0, len(pathList)):
         detail = getDetail(pathList[i])
+        capacity += getTotalCapacity(pathList[i])
         number += int(detail[3])
-        capacity += int(detail[1])
     return [number,capacity]
 
 def addDir(tree,statusLabel):
@@ -204,8 +214,10 @@ def MainWindow():
 
     fm_status.pack(side='top',pady=10)
 
+    
 
     tree['columns'] = (0,1,2,3,4)
+
     tree['show'] = 'headings'
 
     for i in range(0,5):
@@ -234,9 +246,7 @@ def MainWindow():
     scroll = tk.Scrollbar(frame, orient=tk.VERTICAL, command=tree.yview)
     scroll.pack(side=tk.RIGHT, fill="y")
 
-
     tree["yscrollcommand"] = scroll.set
-
 
     tree.pack()
 
