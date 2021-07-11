@@ -205,7 +205,7 @@ def MainWindow():
     addButton = tk.Button(fm_status,text="Add dir",command=lambda: addDir(tree,statusLabel))
     addButton.pack(side='left',padx=5)
     
-    reloadButton = tk.Button(fm_status,text="reloaded",command=lambda: reloadUI(tree,statusLabel))
+    reloadButton = tk.Button(fm_status,text="reload",command=lambda: reloadUI(tree,statusLabel))
     reloadButton.pack(side='right',padx=5)
 
     deleteButton = tk.Button(fm_status,text="Delete dir",command=lambda: deleteDir(tree,statusLabel))
